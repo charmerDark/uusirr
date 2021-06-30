@@ -4,12 +4,12 @@
 EXPERIMENTS_HOME="experiments"
 
 # datasets
-SINTEL_HOME=(YOUR PATH)/MPI-Sintel-complete/
+SINTEL_HOME=MPI-Sintel-complete/
 
 # model and checkpoint
-MODEL=IRR_PWC
+MODEL=new_model
 EVAL_LOSS=MultiScaleEPE_PWC_Bi_Occ_upsample_Sintel
-CHECKPOINT="saved_check_point/IRR-PWC_things3d/checkpoint_latest.ckpt"
+CHECKPOINT="saved_check_point/new_model/checkpoint_latest.ckpt"
 SIZE_OF_BATCH=4
 
 # save path
