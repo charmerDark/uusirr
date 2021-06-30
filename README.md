@@ -1,9 +1,12 @@
 # uusirr
 
-Pipline and Training scripts for trainging optical flow models. See `description.md` for details.
-Portions of the source code (e.g., training pipeline, runtime, argument parser, and logger) are from [IRR](https://github.com/visinf/irr)
-<br>
-link for SINTEL
-http://files.is.tue.mpg.de/sintel/MPI-Sintel-complete.zip
+### Steps to train model
 
-add to folder and set `$SINTEL_HOME` in the training_script
+- All dependecies attached in requirements.txt <br>
+  `cd uusirr && pip install -r requirements.txt`
+- `wget http://files.is.tue.mpg.de/sintel/MPI-Sintel-complete.zip` downloads SINTEL dataset, please do this in the root folder of the repo,
+- run `bash scripts/new_model_train.sh` to train the model
+<br>Pipline and Training scripts for trainging optical flow models. See `description.md` for details.
+<br>
+Portions of the source code (e.g., training pipeline, runtime, argument parser, and logger) are from [IRR](https://github.com/visinf/irr)
+
