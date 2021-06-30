@@ -171,7 +171,7 @@ class FlowEstimatorDense(nn.Module):
 
 class FlowEstimatorDense2(nn.Module):
     def __init__(self, ch_in):
-        super(FlowEstimatorDense, self).__init__()
+        super(FlowEstimatorDense2, self).__init__()
         self.conv1 = conv(ch_in, 128)
         self.conv2 = conv(ch_in + 128, 128)
         self.conv3 = conv(ch_in + 256, 96)
