@@ -17,7 +17,7 @@ TIME=$(date +"%Y%m%d-%H%M%S")
 SAVE_PATH="$EXPERIMENTS_HOME/$MODEL-$TIME"
 
 # training configuration
-python ../main.py \
+python main.py \
 --batch_size=$SIZE_OF_BATCH \
 --batch_size_val=$SIZE_OF_BATCH \
 --checkpoint=$CHECKPOINT \
@@ -46,7 +46,7 @@ python ../main.py \
 --validation_loss=$EVAL_LOSS
 
 # training configuration
-python ../main.py \
+python main.py \
 --batch_size=$SIZE_OF_BATCH \
 --batch_size_val=$SIZE_OF_BATCH \
 --checkpoint=$CHECKPOINT \
