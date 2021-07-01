@@ -1,7 +1,7 @@
 # uusirr
 
 ### Steps to train model
-
+- Clone the repository `git clone https://github.com/charmerDark/uusirr.git`
 - All dependecies attached in requirements.txt <br>
   `cd uusirr && pip install -r requirements.txt`
 - `wget http://files.is.tue.mpg.de/sintel/MPI-Sintel-complete.zip` downloads SINTEL dataset, please do this in the root folder of the repo.
