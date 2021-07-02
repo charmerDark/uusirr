@@ -41,7 +41,7 @@ class _Sintel(data.Dataset):
         if imgtype is "comb":
             images_root = os.path.join(dir_root, "clean")
         flow_root = os.path.join(dir_root, "flow")
-        occ_root = os.path.join(dir_root, "occlusions_rev")
+        occ_root = os.path.join(dir_root, "occlusions")
 
         if not os.path.isdir(images_root):
             raise ValueError("Image directory '%s' not found!")
