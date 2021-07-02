@@ -54,17 +54,17 @@ class _Sintel(data.Dataset):
         all_occ_filenames = sorted(glob(os.path.join(occ_root, "*/*.png")))
         all_img_filenames = sorted(glob(os.path.join(images_root, "*/*.png")))
 
-        # Remember base for substraction at runtime
+        # Remember base for subtraction at runtime
         # e.g. subtract_base = "/home/user/.../MPI-Sintel-Complete/training/clean"
-        self._substract_base = tools.cd_dotdot(images_root)
+        self._subtract_base = tools.cd_dotdot(images_root)
 
         # ------------------------------------------------------------------------
         # Get unique basenames
         # ------------------------------------------------------------------------
         # e.g. base_folders = [alley_1", "alley_2", "ambush_2", ...]
-        substract_full_base = tools.cd_dotdot(all_img_filenames[0])
+        subtract_full_base = tools.cd_dotdot(all_img_filenames[0])
         base_folders = sorted(list(set([
-            os.path.dirname(fn.replace(substract_full_base, ""))[1:] for fn in all_img_filenames
+            os.path.dirname(fn.replace(subtract_full_base, ""))[1:] for fn in all_img_filenames
         ])))
 
         self._image_list = []
@@ -185,7 +185,7 @@ class _Sintel(data.Dataset):
         occ = common.numpy2torch(occ_np0)
 
         # e.g. "clean/alley_1/"
-        basedir = os.path.splitext(os.path.dirname(im1_filename).replace(self._substract_base, "")[1:])[0]
+        basedir = os.path.splitext(os.path.dirname(im1_filename).replace(self._subtract_base, "")[1:])[0]
 
         # example filename
         basename = os.path.splitext(os.path.basename(im1_filename))[0]
@@ -220,17 +220,17 @@ class _Sintel_test(data.Dataset):
 
         all_img_filenames = sorted(glob(os.path.join(images_root, "*/*.png")))
 
-        # Remember base for substraction at runtime
+        # Remember base for subtraction at runtime
         # e.g. subtract_base = "/home/user/.../MPI-Sintel-Complete/training/clean"
-        self._substract_base = tools.cd_dotdot(images_root)
+        self._subtract_base = tools.cd_dotdot(images_root)
 
         # ------------------------------------------------------------------------
         # Get unique basenames
         # ------------------------------------------------------------------------
         # e.g. base_folders = [alley_1", "alley_2", "ambush_2", ...]
-        substract_full_base = tools.cd_dotdot(all_img_filenames[0])
+        subtract_full_base = tools.cd_dotdot(all_img_filenames[0])
         base_folders = sorted(list(set([
-            os.path.dirname(fn.replace(substract_full_base, ""))[1:] for fn in all_img_filenames
+            os.path.dirname(fn.replace(subtract_full_base, ""))[1:] for fn in all_img_filenames
         ])))
 
         self._image_list = []
@@ -296,7 +296,7 @@ class _Sintel_test(data.Dataset):
         im1, im2 = self._photometric_transform(im1_np0, im2_np0)
 
         # e.g. "clean/alley_1/"
-        basedir = os.path.splitext(os.path.dirname(im1_filename).replace(self._substract_base, "")[1:])[0]
+        basedir = os.path.splitext(os.path.dirname(im1_filename).replace(self._subtract_base, "")[1:])[0]
 
         # example filename
         basename = os.path.splitext(os.path.basename(im1_filename))[0]
