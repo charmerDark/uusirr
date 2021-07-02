@@ -63,9 +63,7 @@ class _Sintel(data.Dataset):
         # ------------------------------------------------------------------------
         # e.g. base_folders = [alley_1", "alley_2", "ambush_2", ...]
         subtract_full_base = tools.cd_dotdot(all_img_filenames[0])
-        base_folders = sorted(list(set([
-            os.path.dirname(fn.replace(subtract_full_base, ""))[1:] for fn in all_img_filenames
-        ])))
+        base_folders = sorted(os.listdir(images_root))
 
         self._image_list = []
         self._flow_list = []
@@ -229,9 +227,7 @@ class _Sintel_test(data.Dataset):
         # ------------------------------------------------------------------------
         # e.g. base_folders = [alley_1", "alley_2", "ambush_2", ...]
         subtract_full_base = tools.cd_dotdot(all_img_filenames[0])
-        base_folders = sorted(list(set([
-            os.path.dirname(fn.replace(subtract_full_base, ""))[1:] for fn in all_img_filenames
-        ])))
+        base_folders = sorted(os.listdir(images_root))
 
         self._image_list = []
 
