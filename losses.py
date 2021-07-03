@@ -637,6 +637,45 @@ class MultiScaleEPE_PWC_Bi_Occ_upsample_Sintel(nn.Module):
 
         return loss_dict
 
+
+class new_model_loss(nn.Module):
+    def __init__(self,
+                 args):
+
+        super(MultiScaleEPE_PWC_Bi_Occ_upsample_Sintel, self).__init__()
+        self._args = args
+        self._batch_size = args.batch_size        
+        self._weights = [0.32, 0.08, 0.02, 0.01, 0.005, 0.00125, 0.0003125]
+
+
+    def forward(self, output_dict, target_dict):
+        loss_dict = {}
+
+        if self.training:
+            output_flo = output_dict['flow']
+
+            # div_flow trick
+            target_flo_f = self._args.model_div_flow * target_dict["target1"]
+
+            # bchw
+            flow_loss = 0
+
+            for ii, output_ii in enumerate(output_flo):
+                loss_ii = 0
+                for jj in range(0, len(output_ii) // 2):
+                    loss_ii = loss_ii + _elementwise_robust_epe_char(output_ii[2 * jj], _downsample2d_as(target_flo_f, output_ii[2 * jj])).sum()
+                    output_ii[2 * jj + 1] = output_ii[2 * jj + 1].detach()
+                flow_loss = flow_loss + self._weights[ii] * loss_ii / len(output_ii) * 2
+
+            loss_dict["total_loss"] = flow_loss / self._batch_size
+
+
+        else:
+            loss_dict["epe"] = _elementwise_epe(output_dict["flow"], target_dict["target1"]).mean()
+            loss_dict["F1"] = f1_score(target_dict["target_occ1"], torch.round(self.occ_activ(output_dict["occ"])))
+
+        return loss_dict
+
 class MultiScaleEPE_PWC_Bi_Occ_upsample_KITTI(nn.Module):
     def __init__(self,
                  args):

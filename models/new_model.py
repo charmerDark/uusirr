@@ -57,7 +57,6 @@ class PWCNet(nn.Module):
         output_dict = {}
         output_dict_eval = {}
         flows = []
-        occs = []
 
         _, _, h_x1, w_x1, = x1_pyramid[0].size()
         flow_f = torch.zeros(batch_size, 2, h_x1, w_x1).float().cuda()
@@ -132,15 +131,11 @@ class PWCNet(nn.Module):
 
                 x2_warp = self.warping_layer(x2, flow_f, height_im, width_im, self._div_flow)
                 x1_warp = self.warping_layer(x1, flow_b, height_im, width_im, self._div_flow)
-                flow_b_warp = self.warping_layer(flow_b, flow_f, height_im, width_im, self._div_flow)
-                flow_f_warp = self.warping_layer(flow_f, flow_b, height_im, width_im, self._div_flow)
 
-
-        output_dict_eval['flow'] = upsample2d_as(flow_f, x1_raw, mode="bilinear") * (1.0 / self._div_flow)
         output_dict['flow'] = flows
-        output_dict['occ'] = occs
 
         if self.training:
             return output_dict
         else:
+            output_dict_eval['flow'] = upsample2d_as(flow_f, x1_raw, mode="bilinear") * (1.0 / self._div_flow)
             return output_dict_eval
