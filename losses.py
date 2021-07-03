@@ -642,7 +642,7 @@ class new_model_loss(nn.Module):
     def __init__(self,
                  args):
 
-        super(MultiScaleEPE_PWC_Bi_Occ_upsample_Sintel, self).__init__()
+        super(new_model_loss, self).__init__()
         self._args = args
         self._batch_size = args.batch_size        
         self._weights = [0.32, 0.08, 0.02, 0.01, 0.005, 0.00125, 0.0003125]
