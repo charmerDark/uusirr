@@ -8,7 +8,7 @@ SINTEL_HOME=MPI-Sintel-complete/
 
 # model and checkpoint
 MODEL=new_model
-EVAL_LOSS=MultiScaleEPE_PWC_Bi_Occ_upsample_Sintel
+EVAL_LOSS=new_model_loss
 SIZE_OF_BATCH=4
 
 # save path
