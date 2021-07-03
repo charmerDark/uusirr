@@ -672,7 +672,6 @@ class new_model_loss(nn.Module):
 
         else:
             loss_dict["epe"] = _elementwise_epe(output_dict["flow"], target_dict["target1"]).mean()
-            loss_dict["F1"] = f1_score(target_dict["target_occ1"], torch.round(self.occ_activ(output_dict["occ"])))
 
         return loss_dict
 
