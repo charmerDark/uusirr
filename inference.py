@@ -56,11 +56,12 @@ def main():
     i=0 #indexing for temp images
     first_frame=True#Flag marking first frame for exclusion
     temp_path="temp" #path for temporary files to be stitched
+    os.mkdir(temp_path)
 
     while(True):
         ret,frame=cap.read()
         if ret:
-            if first_frame:
+            if first_frame==True:
                 first_frame=False
                 prev_frame=frame
             else:
@@ -80,7 +81,6 @@ def main():
                 #plotting flow and saving figures to stitch into video
                 step=args.step
 
-                os.mkdir(temp_path)
                 plt.figure()
                 plt.axis('off')
                 plt.imshow(prev_frame)
@@ -92,8 +92,8 @@ def main():
             prev_frame=frame# setting current frame to prev_frame for next iteration
         else:
             break
-        cap.release()
-        cv2.destroyAllWindows()
+    cap.release()
+    cv2.destroyAllWindows()
     # using ffmpeg to stitch photos in the temp folder into a
     os.system('ffmpeg -framerate 5 -i '+temp_path+'/combined_%d.png '+args.outputpath)
     shutil.rmtree(temp_path)
