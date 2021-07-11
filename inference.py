@@ -86,7 +86,7 @@ def main():
                 plt.axis('off')
                 plt.imshow(prev_frame)
                 plt.quiver(np.arange(0,flow.shape[2],step),np.arange(0,flow.shape[1],step),flow[0,::step, ::step],flow[1,::step,::step],flow_norm[::step,::step]+5)
-                plt.savefig(os.path.join(temp_path/),transparent=True,bbox_inches='tight', pad_inches=0)
+                plt.savefig(os.path.join(temp_path,'combined_'+str(i)+'.png'),transparent=True,bbox_inches='tight', pad_inches=0)
                 plt.close()
                 i+=1
 
