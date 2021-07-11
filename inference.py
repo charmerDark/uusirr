@@ -4,9 +4,9 @@ import os
 import cv2
 import tools
 import shutil
-#import commandline
-#import torch
-#from torchvision import transforms as vision_transforms
+import commandline
+import torch
+from torchvision import transforms as vision_transforms
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -15,8 +15,7 @@ import tools
 def main():
     parser = argparse.ArgumentParser()
     add = parser.add_argument
-    add("--model")
-    add("model_class")
+    add("--model",help="Path to model")
     add("--checkpoint", type=tools.str2str_or_none, default=None,help="ckpt file holding saved state")
     add("--videopath",help="path to input file")
     add("--outputpath",help="name and path to output mp4 file")
@@ -25,11 +24,11 @@ def main():
     
     #loading model and checkpoint
     model_dict=tools.module_classes_to_dict(models)
-    if args.model_class not in model_dict:
+    if args.model not in model_dict:
         print("Model class not found")
         exit()
     else:
-        model=model_dict[args.model_class](args=None)
+        model=model_dict[args.model](args=None)
 
     if args.checkpoint== None or not os.path.isfile(args.checkpoint):
         print("No checkpoint folder found")
@@ -61,7 +60,7 @@ def main():
     while(True):
         ret,frame=cap.read()
         if ret:
-            if first_frame==True:
+            if first_frame:
                 first_frame=False
                 prev_frame=frame
             else:
@@ -96,7 +95,7 @@ def main():
         cap.release()
         cv2.destroyAllWindows()
     # using ffmpeg to stitch photos in the temp folder into a
-    os.system('ffmpeg -framerate 5 -i  combined_%d.png '+args.outputpath)
+    os.system('ffmpeg -framerate 5 -i '+temp_path+'/combined_%d.png '+args.outputpath)
     shutil.rmtree(temp_path)
 
 if __name__ == "__main__":
