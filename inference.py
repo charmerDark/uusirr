@@ -95,9 +95,9 @@ def main():
             break
         cap.release()
         cv2.destroyAllWindows()
-# using ffmpeg to stitch photos in the temp folder into a
-os.system('ffmpeg -framerate 5 -i  combined_%d.png '+args.outputpath)
-shutil.rmtree(temp_path)
+    # using ffmpeg to stitch photos in the temp folder into a
+    os.system('ffmpeg -framerate 5 -i  combined_%d.png '+args.outputpath)
+    shutil.rmtree(temp_path)
 
 if __name__ == "__main__":
     main()
