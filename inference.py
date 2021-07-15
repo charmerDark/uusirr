@@ -34,7 +34,7 @@ def main():
         print("No checkpoint folder found")
         exit()
     else:
-        checkpoint = torch.load("/content/checkpoint_best.ckpt")
+        checkpoint = torch.load(args.checkpoint)
         state_dict = checkpoint['state_dict']
         state_dict_new = {}
         for key, value in state_dict.items():
