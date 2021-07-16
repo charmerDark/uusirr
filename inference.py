@@ -15,10 +15,11 @@ import tools
 def main():
     parser = argparse.ArgumentParser()
     add = parser.add_argument
-    add("--model",help="Path to model")
-    add("--checkpoint", type=tools.str2str_or_none, default=None,help="ckpt file holding saved state")
-    add("--videopath",help="path to input file")
-    add("--outputpath",help="name and path to output mp4 file")
+    add("--model",help="Path to model",required=True)
+    add("--checkpoint", type=tools.str2str_or_none, default=None,help="ckpt file holding saved state",required=True)
+    add("--videopath",help="path to input file",required=True)
+    add("--outputpath",help="name and path to output mp4 file, omit if output video not to be saved")
+    add("--flowpath", help="add path to output .npy file, omit if flow not to be saved")
     add("--step",type=int)
     args = parser.parse_args()
     
@@ -57,6 +58,7 @@ def main():
     first_frame=True#Flag marking first frame for exclusion
     temp_path="temp" #path for temporary files to be stitched
     os.mkdir(temp_path)
+    flows=[]
 
     while(True):
         ret,frame=cap.read()
@@ -74,6 +76,7 @@ def main():
                 output_dict = model.forward(input_dict)
                 flow = output_dict['flow'].squeeze(0).detach().cpu().numpy()
                 flow_norm=np.linalg.norm(flow,axis=0)
+                flows.append(flow)
                 
                 #Post processing flow
                 #insert code for post processing here
@@ -94,8 +97,15 @@ def main():
             break
     cap.release()
     cv2.destroyAllWindows()
-    # using ffmpeg to stitch photos in the temp folder into a
-    os.system('ffmpeg -framerate 5 -i '+temp_path+'/combined_%d.png '+args.outputpath)
+
+    # using ffmpeg to stitch photos in the temp folder into a video if outputpath is an argument
+    if args.outputpath is not None:
+        os.system('ffmpeg -framerate 5 -i '+temp_path+'/combined_%d.png '+args.outputpath)
+    #saving flows accumulated into a single .npy file if flowpath is an argument
+    if args.flowpath is not None:
+        flows=np.array(flows)
+        with open(args.flowpath,'wb') as f:
+            np.save(f,flows)  
     shutil.rmtree(temp_path)
 
 if __name__ == "__main__":
