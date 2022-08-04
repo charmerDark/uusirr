@@ -1,4 +1,8 @@
-Testing pipeline and other functions mainly. Basic changes introduced. Watchout for training time Note down GPU available. Uses slightly changed Flow Desnity Estimator (FlowEstimatorDense2 from models/pwc_modules) Training on Sintel Clean and then Sintel Complete.
+This branch (usirr_greyscale) is focused on training the frames in a greyscale color mode. 
+
+Check the number of parameters and decrease compared to RGB model. Changes to be made to code for dataset loaders to ensure RGB is converted to greyscale properly.
+
+Look at effects of stride and other hyperparamters.
 
 
 Ideas
