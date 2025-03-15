@@ -7,7 +7,12 @@
 - `wget http://files.is.tue.mpg.de/sintel/MPI-Sintel-complete.zip` downloads SINTEL dataset, please do this in the root folder of the repo.
 - unzip packagge using `unzip MPI-Sintel-complete.zip -d uusirr/MPI_Sintel-complete/`
 - run `bash scripts/new_model_train.sh` to train the model
-<br>Pipline and Training scripts for trainging optical flow models. See `description.md` for details.
+<br>
+Pipline and Training scripts for trainging optical flow models. See `description.md` for details.
 <br>
 Portions of the source code (e.g., training pipeline, runtime, argument parser, and logger) are from [IRR](https://github.com/visinf/irr)
+<br>
+- `conda create -n uusirr -f environment.yml` 
+- change run.sh as per inputs
+- `sbatch run.sh`
 

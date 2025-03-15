@@ -17,9 +17,8 @@ def main():
     add("--checkpoint", type=tools.str2str_or_none, default=None, help="ckpt file holding saved state", required=True)
     add("--image1path", help="path to input file", required=True)
     add("--image2path", help="path to input file", required=True)
-    add("--outputpath", help="name and path to output mp4 file, omit if output video not to be saved")
+    add("--outputpath", help="name and path to output png file")
     add("--flowpath", help="add path to output .npy file, omit if flow not to be saved")
-    add("--step", type=int)
     args = parser.parse_args()
     
     # Loading model and checkpoint
@@ -84,6 +83,7 @@ def main():
     plt.colorbar()
     plt.title('Optical Flow Magnitude')
     plt.show()
+    plt.savefig(f"{args.outputpath}.png", transparent=True,bbox_inches='tight', pad_inches=0)
 
 if __name__ == "__main__":
     main()
