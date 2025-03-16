@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#Dataset
+MPI-Sintel-complete
+MPI-Sintel-complete.zip
+miccai_2022_buv_dataset.7z
+miccai_2022_buv_dataset
+
+#Slurm output files
+slurm-*.out
