@@ -260,7 +260,6 @@ def main():
     hyperparameters = {
         'Learning Rate for pre-trained network': 0.0001,
         'learnig rate for pwc net parameters': 0.001,
-        'Learning Rate for classifier': 0.001,
         'Weight Decay for regularization': 1e-5,
         'Epochs': epochs,
         'Patience for early stopping': patience,
