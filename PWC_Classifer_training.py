@@ -258,6 +258,7 @@ def main():
     patience_counter = 0
     
     hyperparameters = {
+        'model type': 'PWC classifier - fully trainable',
         'Learning Rate for pre-trained network': 0.0001,
         'learnig rate for pwc net parameters': 0.001,
         'Weight Decay for regularization': 1e-5,
