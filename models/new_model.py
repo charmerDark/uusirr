@@ -12,9 +12,10 @@ from .irr_modules import RefineFlow
 
 
 class PWCNet(nn.Module):
-    def __init__(self, args, div_flow=0.05):
+    def __init__(self, args, subnet = False, div_flow=0.05):
         super(PWCNet, self).__init__()
         self.args = args
+        self.subnet = subnet
         self._div_flow = div_flow
         self.search_range = 4
         self.num_chs = [3, 16, 32, 64, 96, 128, 196]
@@ -134,7 +135,7 @@ class PWCNet(nn.Module):
 
         output_dict['flow'] = flows
 
-        if self.training:
+        if self.training or self.subnet:
             return output_dict
         else:
             output_dict_eval['flow'] = upsample2d_as(flow_f, x1_raw, mode="bilinear") * (1.0 / self._div_flow)

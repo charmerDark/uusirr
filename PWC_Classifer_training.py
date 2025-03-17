@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class PWCNetClassifier(nn.Module):
     def __init__(self):
         super(PWCNetClassifier, self).__init__()
-        self.pwcnet = PWCNet(args=None)
+        self.pwcnet = PWCNet(args=None, subnet = True)
         self.num_features_before_fc = 2 * 224 * 224  # 2 output channels, 224 x 224 flow maps
         self.classifier = nn.Sequential(
             nn.Linear(self.num_features_before_fc, 512),
@@ -201,6 +201,12 @@ def main():
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_dir = f"output_{timestamp}"
     os.makedirs(output_dir, exist_ok=True)
+
+    # Setup logging for each run
+    file_handler = logging.FileHandler(os.path.join(output_dir, 'training.log'), 'a')
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
     
     # Setup device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -246,11 +252,22 @@ def main():
     criterion = nn.CrossEntropyLoss()
     
     # Training parameters
-    epochs = 1
+    epochs = 30
     best_val_acc = 0.0
     patience = 10  # For early stopping
     patience_counter = 0
     
+    hyperparameters = {
+        'Learning Rate for pre-trained network': 0.0001,
+        'learnig rate for pwc net parameters': 0.001,
+        'Learning Rate for classifier': 0.001,
+        'Weight Decay for regularization': 1e-5,
+        'Epochs': epochs,
+        'Patience for early stopping': patience,
+    }
+    
+    logger.info(f"Hyperparameters: {hyperparameters}")
+
     # Metrics tracking
     metrics = {
         'train_loss': [], 'val_loss': [],
