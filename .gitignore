@@ -134,5 +134,6 @@ MPI-Sintel-complete.zip
 miccai_2022_buv_dataset.7z
 miccai_2022_buv_dataset
 
-#Slurm output files
+#Slurm and otheroutput files
 slurm-*.out
+output_2025*
