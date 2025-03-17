@@ -256,7 +256,7 @@ def main():
     criterion = nn.CrossEntropyLoss()
     
     # Training parameters
-    epochs = 1#testing model
+    epochs = 30#testing model
     best_val_acc = 0.0
     patience = 10  # For early stopping
     patience_counter = 0
