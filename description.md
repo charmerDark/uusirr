@@ -1,5 +1,4 @@
-Testing pipeline and other functions mainly. Basic changes introduced. Watchout for training time Note down GPU available. Uses slightly changed Flow Desnity Estimator (FlowEstimatorDense2 from models/pwc_modules) Training on Sintel Clean and then Sintel Complete.
+Ideas to try
 
-
-Ideas
-Introduce Normalised Convolution
+- Do not train PWC Net - train only the new layers
+- Use convolution to maintain spatial data of flows (PWC does use quite a lot of convolutions - so not very sure)
