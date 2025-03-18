@@ -245,8 +245,27 @@ def main():
     test_loader = DataLoader(test_dataset, batch_size=10, shuffle=False, num_workers=4)
     
     # Initialize model
+    pwc_weights_path = "/home/s2751455/uusirr/saved_check_point/new_model/PWC_net_sintel/checkpoint_best.ckpt"
     model = PWCffNetClassifier()
+    pretrained_state_dict = torch.load(pwc_weights_path)
+    if 'state_dict' in pretrained_state_dict:
+        pretrained_state_dict = pretrained_state_dict['state_dict']
+    
+    pwc_state_dict = {k: v for k, v in pretrained_state_dict.items() 
+                      if k.startswith('pwcnet') or not k.startswith('classifier')}
+    
+    # Load the weights into the model
+    model_state_dict = model.state_dict()
+    model_state_dict.update(pwc_state_dict)
+    model.load_state_dict(model_state_dict)
+
+    logger.info(f"Loaded pretrained PWCNet weights from {pwc_weights_path}")
     model.to(device)
+
+    for param in model.pwcnet.parameters():
+        param.requires_grad = False
+    
+    logger.info(f"Loaded weights frozen")
     
     # Optimizer and scheduler
     optimizer = optim.Adam([{'params': model.classifier.parameters(), 'lr': 0.001}  # Higher learning rate for classifier
@@ -256,7 +275,7 @@ def main():
     criterion = nn.CrossEntropyLoss()
     
     # Training parameters
-    epochs = 30#testing model
+    epochs = 30
     best_val_acc = 0.0
     patience = 10  # For early stopping
     patience_counter = 0

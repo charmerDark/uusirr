@@ -239,13 +239,29 @@ def main():
     test_loader = DataLoader(test_dataset, batch_size=10, shuffle=False, num_workers=4)
     
     # Initialize model
+    pwc_weights_path = "/home/s2751455/uusirr/saved_check_point/new_model/PWC_net_sintel/checkpoint_best.ckpt"
     model = PWCNetClassifier()
-    model.to(device)
+    pretrained_state_dict = torch.load(pwc_weights_path)
+    if 'state_dict' in pretrained_state_dict:
+        pretrained_state_dict = pretrained_state_dict['state_dict']
+
+    pwc_state_dict = {k: v for k, v in pretrained_state_dict.items() 
+                      if k.startswith('pwcnet') or not k.startswith('classifier')}
     
+    # Load the weights into the model
+    model_state_dict = model.state_dict()
+    model_state_dict.update(pwc_state_dict)
+    model.load_state_dict(model_state_dict)
+
+    logger.info(f"Loaded pretrained PWCNet weights from {pwc_weights_path}")
+
+    model.to(device)
+
+
     # Optimizer and scheduler
     optimizer = optim.Adam([
-        {'params': model.pwcnet.parameters(), 'lr': 0.0001},  # Lower learning rate for pretrained network
-        {'params': model.classifier.parameters(), 'lr': 0.001}  # Higher learning rate for classifier
+        {'params': model.pwcnet.parameters(), 'lr': 1e-5},  # Lower learning rate for pretrained network
+        {'params': model.classifier.parameters(), 'lr': 1e-3}  # Higher learning rate for classifier
     ], weight_decay=1e-5)  # Weight decay for regularization
     
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=5, verbose=True)
@@ -259,8 +275,8 @@ def main():
     
     hyperparameters = {
         'model type': 'PWC classifier - fully trainable',
-        'Learning Rate for pre-trained network': 0.0001,
-        'learnig rate for pwc net parameters': 0.001,
+        'Learning Rate for pre-trained network': 1e-5,
+        'learnig rate for pwc net parameters': 1e-3,
         'Weight Decay for regularization': 1e-5,
         'Epochs': epochs,
         'Patience for early stopping': patience,
