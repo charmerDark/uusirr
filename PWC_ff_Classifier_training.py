@@ -49,6 +49,52 @@ class PWCffNetClassifier(nn.Module):
         output = self.classifier(flow_flat)
         return output
 
+def load_pretrained_pwcnet_weights(model, weights_path):
+    """
+    Load pretrained PWCNet weights with proper key mapping to handle structure differences.
+    
+    Args:
+        model: The PWCNetClassifier model
+        weights_path: Path to the pretrained weights file
+    """
+    # Load the pretrained weights
+    pretrained_state_dict = torch.load(weights_path)
+    if 'state_dict' in pretrained_state_dict:
+        pretrained_state_dict = pretrained_state_dict['state_dict']
+    
+    # Create a new state dict with mapped keys
+    mapped_state_dict = {}
+    
+    # Map the keys from pretrained weights to current model
+    for k, v in pretrained_state_dict.items():
+        # Handle the case where keys in pretrained weights have '_model' 
+        # but current model doesn't have this in the path
+        if '_model.' in k:
+            new_key = k.replace('_model.', 'pwcnet.')
+            mapped_state_dict[new_key] = v
+        else:
+            # For other keys, try to use them directly
+            mapped_state_dict[k] = v
+    
+    # Load mapped weights into the model
+    model_state_dict = model.state_dict()
+    
+    # Count how many keys were successfully mapped
+    matched_keys = 0
+    for k in model_state_dict.keys():
+        if k in mapped_state_dict:
+            model_state_dict[k] = mapped_state_dict[k]
+            matched_keys += 1
+    
+    # Log how many weights were successfully loaded
+    logger.info(f"Successfully loaded {matched_keys} weights out of {len(model_state_dict)} model parameters")
+    
+    # Load the updated state dict
+    model.load_state_dict(model_state_dict, strict=False)
+    
+    return model
+
+
 # Dataset
 class UltrasoundFrameDataset(Dataset):
     def __init__(self, root_dir, transform=None):
@@ -247,20 +293,9 @@ def main():
     # Initialize model
     pwc_weights_path = "/home/s2751455/uusirr/saved_check_point/new_model/PWC_net_sintel/checkpoint_best.ckpt"
     model = PWCffNetClassifier()
-    pretrained_state_dict = torch.load(pwc_weights_path)
-    if 'state_dict' in pretrained_state_dict:
-        pretrained_state_dict = pretrained_state_dict['state_dict']
-    
-    pwc_state_dict = {k: v for k, v in pretrained_state_dict.items() 
-                      if k.startswith('pwcnet') or not k.startswith('classifier')}
-    
-    # Load the weights into the model
-    model_state_dict = model.state_dict()
-    model_state_dict.update(pwc_state_dict)
-    model.load_state_dict(model_state_dict)
-
-    logger.info(f"Loaded pretrained PWCNet weights from {pwc_weights_path}")
     model.to(device)
+
+    model = load_pretrained_pwcnet_weights(model, pwc_weights_path)
 
     for param in model.pwcnet.parameters():
         param.requires_grad = False
@@ -268,7 +303,7 @@ def main():
     logger.info(f"Loaded weights frozen")
     
     # Optimizer and scheduler
-    optimizer = optim.Adam([{'params': model.classifier.parameters(), 'lr': 0.001}  # Higher learning rate for classifier
+    optimizer = optim.Adam([{'params': model.classifier.parameters(), 'lr': 1e-3}  # Higher learning rate for classifier
     ], weight_decay=1e-5)  # Weight decay for regularization
     
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=5, verbose=True)
@@ -282,7 +317,7 @@ def main():
     
     hyperparameters = {
         'Model type': 'PWCffNetClassifier',
-        'learning rate for pwc net parameters': 0.001,
+        'Learning rate for pwc net parameters': 1e-3,
         'Weight Decay for regularization': 1e-5,
         'Epochs': epochs,
         'Patience for early stopping': patience,
